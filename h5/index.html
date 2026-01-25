@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>H5</title>
+  <link rel="stylesheet" href="./quill.snow.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrap {
+      padding: 20px 16px 12px;
+      margin: 0 auto;
+    }
+
+    .title {
+      font-size: 20px;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .info {
+      font-size: 15px;
+      margin-bottom: 0.38rem;
+    }
+
+    .author {
+      color: #576b95;
+      margin-right: 0.2777rem;
+    }
+
+    .create {
+      color: rgba(0, 0, 0, 0.3);
+    }
+
+
+    .ql-container.ql-snow {
+      border: none;
+    }
+
+    .ql-editor {
+      padding: 0 !important;
+    }
+
+
+    @media (min-width: 1200px) {
+      .wrap {
+        margin: 0 auto;
+        width: 1200px;
+      }
+    }
+  </style>
+  <script src="./jquery.min.js"></script>
+  <script src="./H5.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="title"></div>
+    <div class="info">
+      <span class="author"></span>
+      <span class="create"></span>
+    </div>
+
+    <div class="ql-container ql-snow">
+      <div class="ql-editor" id="html">
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function getQueryString(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]); return null;
+    }
+
+    function getRootPath() {
+      //获取当前网址，如： http://localhost:8080/ems/Pages/Basic/Person.jsp
+      var curWwwPath = window.document.location.href;
+      //获取主机地址之后的目录，如： /ems/Pages/Basic/Person.jsp
+      var pathName = window.document.location.pathname;
+      var pos = curWwwPath.indexOf(pathName);
+      //获取主机地址，如： http://localhost:8080
+      var localhostPath = curWwwPath.substring(0, pos);
+      //获取带"/"的项目名，如：/ems
+      var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+      return localhostPath;
+    };
+
+    let doc_id = getQueryString('doc_id')
+    $.ajax({
+      url: getRootPath() + '/index.php?h5/index',
+      type: "get",
+      data: {
+        doc_id
+      },
+      success(res) {
+        res = JSON.parse(res)
+        if (res.code == 0) {
+          $("#html").html(res.data.content)
+          $(".author").html(res.data.author)
+          $(".title").html(res.data.title)
+          $(".create").html(res.data.create_time)
+          $('title').html(res.data.title)
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
