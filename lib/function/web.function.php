@@ -349,6 +349,20 @@ function client_is_windows(){
 	return $is_windows[0];
 }
 
+//是否是移动端
+function agent_is_mobile() 
+{
+	// 判断$_SERVER['HTTP_USER_AGENT']中是否包含如下关键字
+	$keywords = ['Mobile', 'Android', 'iPhone', 'iPad', 'iPod', 'BlackBerry'];
+	foreach ($keywords as $keyword) 
+	{
+		if (stripos($_SERVER['HTTP_USER_AGENT'], $keyword) !== false)
+			return true;
+	}
+	
+	return false;
+}
+
 // 获取操作系统信息 TODO
 function get_os (){
 	$agent = $_SERVER['HTTP_USER_AGENT'];

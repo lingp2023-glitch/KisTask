@@ -8,6 +8,9 @@ class app extends Controller
 
 	public function index()
 	{	
-		$this->display("index.html");
+		if(agent_is_mobile())
+			$this->display("mindex.html");
+		else
+			$this->display("index.html");
 	}
 }
