@@ -14,10 +14,24 @@ $modelWork->__bindQuery("issue_id", $issue_id);
 $modelWork->__bindQuery("userid", $userid);
 $modelWork->__bindQuery("estatus", $issue["status"]);
 $modelWork->__bindQuery("is_finish", 0);
-$modelWork->__bind("is_finish", 1);
-$modelWork->__bind("content", $content);
-$modelWork->__bind("work_time", showtime());
-$modelWork->__mod();
+$work = $modelWork->__getRow();
+if($work)
+{
+    $modelWork->__bind("is_finish", 1);
+    $modelWork->__bind("content", $content);
+    $modelWork->__bind("work_time", showtime());
+    $modelWork->__mod();
+}
+else
+{
+    $modelWork->__bind("issue_id", $issue_id);
+    $modelWork->__bind("userid", $userid);
+    $modelWork->__bind("estatus", $issue["status"]);
+    $modelWork->__bind("is_finish", 1);
+    $modelWork->__bind("content", $content);
+    $modelWork->__bind("work_time", showtime());
+    $modelWork->__add();
+}
 
 //添加下一状态处理人员
 foreach($workers as $w)
@@ -26,8 +40,6 @@ foreach($workers as $w)
     $modelWork->__bind("userid", $w);
     $modelWork->__bind("bstatus", $issue["status"]);
     $modelWork->__bind("estatus", $status);
-    //if(!empty($this->in["btime"])) $modelWork->__bind("btime", $this->in["btime"]);
-    //if(!empty($this->in["etime"])) $modelWork->__bind("etime", $this->in["etime"]);
     $modelWork->__add();
 }
 

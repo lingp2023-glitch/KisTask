@@ -6,6 +6,10 @@ $data = $modelIssue->__getRow("issue_id", $issue_id);
 $data["severity_name"] = $config["severity"][$data["severity"]];
 $data["priority_name"] = $config["priority"][$data["priority"]];
 
+$modelProject = init_submodel("project", "project");
+$project = $modelProject->__getRow("id", $data["project_id"]);
+$data["project_name"] = $project["name"];
+
 $modelFlow = init_submodel("flow", "project"); 
 $dst_status = $modelFlow->dstStatus($data["status"], $data["project_id"], 0);
 $data["dst_status"] = $dst_status;
@@ -19,5 +23,18 @@ $data["creater_name"] = $user["name"];
 
 $modelIssueWorker = init_submodel("issueWork", "issue");
 $data["workers"] = $modelIssueWorker->workers($data["project_id"], $data["status"]);
+
+$modelIssue->__bindQuery("issue_id", $issue_id, ">");
+$modelIssue->__orderBy("issue_id");
+$next_issue = $modelIssue->__getRow();
+$next_id = ($next_issue)?$next_issue["issue_id"]:0;
+
+$modelIssue->__bindQuery("issue_id", $issue_id, "<");
+$modelIssue->__orderBy("issue_id desc");
+$prev_issue = $modelIssue->__getRow();
+$prev_id = ($prev_issue)?$prev_issue["issue_id"]:0;
+
+$data["next_id"] = $next_id;
+$data["prev_id"] = $prev_id;
 
 $this->__exit(0, '', $data);

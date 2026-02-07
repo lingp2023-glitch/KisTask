@@ -6,6 +6,7 @@ $query_code = $this->in["query_code"];
 $userid = $this->user["userid"];
 
 $modelIssue = init_submodel("issue", "issue");
+
 if(!empty($query_str)) 
     $modelIssue->__bindQuery("title", $query_str, "like");
 switch($query_code)
@@ -20,9 +21,11 @@ switch($query_code)
         $modelIssue->__bindQuery("creater", $userid);
         break;
 }
-
 $data = $modelIssue->__pageList($page); 
+
 $modelFlow = init_submodel("flow", "project");
+$modelProject = init_submodel("project", "project");
+$modelAcct = init_submodel("account", "account"); 
 for($i=0; $i<$data["num"];$i++)
 {
     $flow = $modelFlow->__getRow("flow_id", $data["list"][$i]["flow_id"]);
@@ -33,7 +36,9 @@ for($i=0; $i<$data["num"];$i++)
     $modelIssueWorker = init_submodel("issueWork", "issue");
     $data["list"][$i]["workers"] = $modelIssueWorker->workers($data["list"][$i]["project_id"], $data["list"][$i]["status"]);
 
-    $modelAcct = init_submodel("account", "account"); 
+    $project = $modelProject->__getRow("id", $data["list"][$i]["project_id"]);
+    $data["list"][$i]["project_name"] = $project["name"];
+
     $user = $modelAcct->__getRow("userid", $data["list"][$i]["creater"]);
     $data["list"][$i]["creater_name"] = $user["name"];
 }
