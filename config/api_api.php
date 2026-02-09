@@ -336,6 +336,15 @@ define('API_DEF', '[
         {"name":"token", "type":"string", "cn_name":"用户凭证", "is_must":1, "example":"'.$token.'"}
       ]
     },
+     {
+      "name":"修改任务",
+      "api":"api/issue/mod",
+      "params":[
+        {"name":"issue_id", "type":"int", "cn_name":"事务标识", "is_must":1, "example":"1"},       
+        {"name":"content", "type":"string", "cn_name":"内容", "is_must":1, "example":"1"},
+        {"name":"token", "type":"string", "cn_name":"用户凭证", "is_must":1, "example":"'.$token.'"}
+      ]
+    },
     {
       "name":"查询处理人",
       "api":"api/issue/queryWorker",
